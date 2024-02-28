@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2023
+ * Regis Rousseau
+ * Univ Lyon, INSA Lyon, Inria, CITI, EA3720
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* configuration of ADC for geophone sensor */
+/* adjust channel number according to pinmux in board.dts */
+/* PB13 ADC_GSONE -> ADC_IN0 - see datasheet Pinout Config pg 56/149*/
+
+/ {
+	zephyr,user {
+		io-channels = <&adc1 13>;
+	};
+	aliases {
+		rtc = &rtc;
+	};
+
+/* VBAT battery voltage monitoring */
+/* internal ADC channnel of STM32, Px14 - see datasheet ADC part pg 42/149 */
+
+	stm32_vbat: stm32vbat {
+    	compatible = "st,stm32-vbat";
+    	io-channels = <&adc1 14>;
+    	ratio = <3>;
+    	status = "okay";
+	};
+};
+
+/* config of BME280 sensor (temperature and Humidity) on i2c bus */
+/* address 0x77 --> Address Chip Select on high level (VDD) */
+
+&i2c1 {
+	status = "okay";
+	bme280@77 {
+		compatible = "bosch,bme280";
+		reg = <0x77>;
+	};
+};
+
+&adc1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	channel@13 {
+		reg = <13>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <12>;
+	};
+};
+
