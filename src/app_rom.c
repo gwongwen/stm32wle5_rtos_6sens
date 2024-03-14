@@ -22,35 +22,40 @@ int8_t ind_r;		// index used by Interrupt Service Routine
 //  ======== app_rom_init =========================================
  int8_t app_rom_init(const struct device *dev)
  {
-    int8_t ret;;
+    int8_t ret;
+	ssize_t size;
 
 	// getting eeprom device
 	dev = DEVICE_DT_GET(DT_ALIAS(eeprom0));
 
-    if (dev = NULL) {
+    if (dev == NULL) {
 		printk("no eeprom device found. error: %d\n", dev);
 		return 0;
 	}
     if (!device_is_ready(dev)) {
-		printk("eeprom is not ready. error: %d\n", dev);
+		printk("eeprom is not ready\n");
 		return 0;
 	} else {
         printk("- found device \"%s\", writing/reading data\n", dev->name);
     }
 
 	// erasing 1 page at @0x00
-	ret  = flash_erase(dev, ROM_OFFSET, 512*ROM_PAGE_SIZE);
+	ret  = flash_erase(dev, ROM_OFFSET, 1024*ROM_PAGE_SIZE);
 	if (ret) {
 		printk("error erasing flash. error: %d\n", ret);
 	} else {
 		printk("erased all pages\n");
 	}
+
+	// check eeprom size
+	size = eeprom_get_size(dev);
+	printk("using eeprom with size of: %zu.\n", size);
 	ind_r = 0;	// initialisation of isr index
 	return 0;
 }
 
 //  ======== app_rom_write ========================================
-int8_t app_rom_write(const struct device *dev, uint16_t data)
+int8_t app_rom_write(const struct device *dev, void *data)
 {
 	int8_t ret;
 	dev = DEVICE_DT_GET(DT_ALIAS(eeprom0));
@@ -104,8 +109,8 @@ int8_t app_rom_handler(const struct device *dev)
 	// definition of a trigger threshold
 	if (adc_val > THRESHOLD){
 
-		// putting 73 structures in all page (512 pages in this eeprom)
-		if (ind_r < 512*ROM_STRUCT_SIZE) {
+		// putting 36 structures in all page (1024 pages in this eeprom)
+		if (ind_r < 1024*ROM_STRUCT_SIZE) {
 			data[ind_r].id = dev_eui;
 			data[ind_r].timestamp = times;
 			data[ind_r].val = adc_val;

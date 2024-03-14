@@ -53,14 +53,14 @@ int8_t main(void)
 	app_stm32_vbat_init(bat_dev);
 	app_rom_init(rom_dev);
 	app_flash_init(flash_dev);
-	app_stm32_rtc_init(cal_dev);
+//	app_stm32_rtc_init(cal_dev);
 
 	// getting timestamp from lorawan
-	time = app_lorawan_init(lora_dev);
+//	time = app_lorawan_init(lora_dev);
 	
 	// beginning of isr timer
-	k_timer_start(&sens_timer, K_SECONDS(15), K_SECONDS(15));	// for test
-	k_timer_start(&geo_timer, K_SECONDS(5), K_SECONDS(5));
+	k_timer_start(&sens_timer, K_SECONDS(5), K_SECONDS(5));	// for test
+	k_timer_start(&geo_timer, K_SECONDS(2), K_SECONDS(2));
 	
 //	k_timer_start(&sens_timer, K_MINUES(30), K_MINUTES(30));	// final code
 //	k_timer_start(&geo_timer, K_MSEC(5), K_MSEC(5));

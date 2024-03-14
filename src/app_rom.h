@@ -16,16 +16,17 @@
 
 //  ======== defines ==============================================
 #define ROM_OFFSET              0x00
-#define ROM_PAGE_SIZE           1024
+#define ROM_PAGE_SIZE           512
 #define ROM_BUFFER_SIZE         14   // 1 structure: ID+timestamp+value = 14 bytes
-#define ROM_STRUCT_SIZE         73   // number of structures to store per page
+#define ROM_STRUCT_SIZE         36   // number of structures to store per page
 #define LORAWAN_DEV_EUI		    { 0x70, 0xB3, 0xD5, 0x7E, 0xD0, 0x06, 0x21, 0xA5 }  // ID for test
 #define THRESHOLD               2048    // for now, VDD/2  
                                         
 //  ======== prototypes ===========================================
 int8_t app_rom_init(const struct device *dev);
-int8_t app_rom_write(const struct device *dev, uint16_t data);
+int8_t app_rom_write(const struct device *dev, void *data);
 int8_t app_rom_read(const struct device *dev);
 int8_t app_rom_handler(const struct device *dev);
+
 
 #endif /* APP_ROM_H_ */
