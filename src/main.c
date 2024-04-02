@@ -38,29 +38,23 @@ K_TIMER_DEFINE(sens_timer, sens_timer_handler, NULL);
 //  ======== main ===============================================
 int8_t main(void)
 {
-	const struct device *rom_dev = NULL;
-	const struct device *bme_dev = NULL;
-	const struct device *bat_dev = NULL;
-	const struct device *flash_dev = NULL;
-	const struct device *cal_dev = NULL;
-	const struct device *lora_dev = NULL;
-
+	const struct device *dev = NULL;
 	char buffer[32];
 	time_t time;
 
 	// initialization of all devices
-	app_bme280_init(bme_dev);
-	app_stm32_vbat_init(bat_dev);
-	app_rom_init(rom_dev);
-	app_flash_init(flash_dev);
-//	app_stm32_rtc_init(cal_dev);
+	app_bme280_init(dev);
+	app_stm32_vbat_init(dev);
+	app_rom_init(dev);
+	app_flash_init(dev);
+//	app_stm32_rtc_init(dev);
 
 	// getting timestamp from lorawan
-//	time = app_lorawan_init(lora_dev);
+//	time = app_lorawan_init(dev);
 	
 	// beginning of isr timer
-	k_timer_start(&sens_timer, K_SECONDS(5), K_SECONDS(5));	// for test
-	k_timer_start(&geo_timer, K_SECONDS(2), K_SECONDS(2));
+//	k_timer_start(&sens_timer, K_SECONDS(5), K_SECONDS(5));	// for test
+//	k_timer_start(&geo_timer, K_SECONDS(2), K_SECONDS(2));
 	
 //	k_timer_start(&sens_timer, K_MINUES(30), K_MINUTES(30));	// final code
 //	k_timer_start(&geo_timer, K_MSEC(5), K_MSEC(5));

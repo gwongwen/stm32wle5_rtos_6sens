@@ -15,7 +15,7 @@
 
 //  ======== prototypes ============================================
 int8_t app_bme280_init(const struct device *dev);
-uint16_t app_bme280_get_temp(const struct device *dev);
+int16_t app_bme280_get_temp(const struct device *dev);
 uint16_t app_bme280_get_press(const struct device *dev);
 uint16_t app_bme280_get_hum(const struct device *dev);
 

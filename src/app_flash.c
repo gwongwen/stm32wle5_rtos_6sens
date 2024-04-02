@@ -124,7 +124,7 @@ int8_t app_flash_handler(struct nvs_fs *fs)
 	int16_t vbat, temp;
 	uint16_t press, hum;
 
-	// putting 5 structures in fisrt page for this test
+	// putting 48 structures in fisrt page
 	if (ind_f < NVS_BUFFER_SIZE) {
 		data[ind_f].vbat = app_stm32_get_vbat(bat_dev);
 		data[ind_f].temp = app_bme280_get_temp(bme_dev);
