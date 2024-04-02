@@ -27,10 +27,10 @@ int8_t app_bme280_init(const struct device *dev)
 }
 
 //  ======== app_bme280_get_temp ========================================
-uint16_t app_bme280_get_temp(const struct device *dev)
+int16_t app_bme280_get_temp(const struct device *dev)
 {
     struct sensor_value temp_int32;
-    uint16_t temp_uint16;
+    int16_t temp_int16;
     int8_t ret;
 
     // getting bme280 sensor i2c device
@@ -52,9 +52,9 @@ uint16_t app_bme280_get_temp(const struct device *dev)
 
     // temperature received from channel get
     // resolution 12 bits: 0 to 4095 (uint16)
-	temp_uint16 = (uint16_t)(temp_int32.val1*100 + temp_int32.val2 / 10000);
-    printk("bme280 temp: %d\n", temp_uint16);
-    return temp_uint16;
+	temp_int16 = (int16_t)(temp_int32.val1*100 + temp_int32.val2 / 10000);
+    printk("bme280 temp: %d\n", temp_int16);
+    return temp_int16;
 }
 
 //  ======== app_bme280_get_press =======================================
