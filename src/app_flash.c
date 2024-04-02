@@ -121,7 +121,8 @@ int8_t app_flash_handler(struct nvs_fs *fs)
 	bme_dev = DEVICE_DT_GET_ANY(bosch_bme280);
 	lora_dev = DEVICE_DT_GET(DT_ALIAS(lora0));
 
-	uint16_t vbat, temp, press, hum;
+	int16_t vbat, temp;
+	uint16_t press, hum;
 
 	// putting 5 structures in fisrt page for this test
 	if (ind_f < NVS_BUFFER_SIZE) {
