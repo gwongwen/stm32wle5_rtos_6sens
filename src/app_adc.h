@@ -5,8 +5,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef APP_SENSOR_H
-#define APP_SENSOR_H
+#ifndef APP_ADC_H
+#define APP_ADC_H
 
 //  ======== includes =============================================
 #include <zephyr/kernel.h>
@@ -19,4 +19,4 @@
 //  ======== prototypes ===========================================
 uint16_t app_adc_get_val(void);
 
-#endif /* APP_SENSOR_H */
+#endif /* APP_ADC_H */

@@ -15,6 +15,6 @@
 
 //  ======== prototypes ============================================
 int8_t app_stm32_vbat_init(const struct device *dev);
-int16_t app_stm32_get_vbat(const struct device *dev);
+uint16_t app_stm32_get_vbat(const struct device *dev);
 
 #endif /* APP_VBAT_H */

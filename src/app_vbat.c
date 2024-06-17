@@ -28,10 +28,10 @@ int8_t app_stm32_vbat_init(const struct device *dev)
 }
 
 //  ======== app_stm32_get_vbat =============================================
-int16_t app_stm32_get_vbat(const struct device *dev)
+uint16_t app_stm32_get_vbat(const struct device *dev)
 {
     struct sensor_value bat_int32;
-    int16_t bat_int16;
+    uint16_t bat_uint16;
     int8_t ret = 0;
 
     // getting vbat ADC device
@@ -53,7 +53,7 @@ int16_t app_stm32_get_vbat(const struct device *dev)
 
     // battery level received and converted from channel get
     // resolution 12bits: 0 to 4095 (uint16)
-    bat_int16 = (int16_t)(bat_int32.val1*100 + bat_int32.val2/10000);
-    printk("stm32 vbat: %d\n", bat_int16);
-    return bat_int16;
+    bat_uint16 = (uint16_t)(sensor_value_to_milli(&bat_int32));
+    printk("stm32 vbat: %d\n", bat_uint16);
+    return bat_uint16;
 }

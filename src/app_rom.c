@@ -47,9 +47,7 @@ int8_t ind_r;		// index used by Interrupt Service Routine
 		printk("erased all pages\n");
 	}
 
-	// check eeprom size
-	size = eeprom_get_size(dev);
-	printk("using eeprom with size of: %zu.\n", size);
+	// initialisation of isr index
 	ind_r = 0;	// initialisation of isr index
 	return 0;
 }
@@ -74,7 +72,7 @@ int8_t app_rom_write(const struct device *dev, void *data)
 int8_t app_rom_read(const struct device *dev)
 {
 	int8_t ret;
-	struct rom_data data[ROM_STRUCT_SIZE];
+	struct rom_data data[ROM_BUFFER_SIZE];
 	dev = DEVICE_DT_GET(DT_ALIAS(eeprom0));
 
 	// reading the first page
@@ -85,13 +83,13 @@ int8_t app_rom_read(const struct device *dev)
 		printk("read %zu bytes from address 0x00\n", sizeof(data));
 	}
 	// printing data
-	for (int8_t i = 0; i < ROM_STRUCT_SIZE; i++) {
-		printk("val: %d\n", data[i].val);
+	for (int8_t i = 0; i < ROM_MAX_RECORDS; i++) {
+		printk("val: %"PRIu16"\n", data[i].val);
 	}
 	return 0;
 }
 
-//  ======== app_rom_handler =======================================
+//  ======== app_rom_handler ======================================
 int8_t app_rom_handler(const struct device *dev)
 {
 	int8_t ret;
@@ -110,7 +108,7 @@ int8_t app_rom_handler(const struct device *dev)
 	if (adc_val > THRESHOLD){
 
 		// putting 36 structures in all page (1024 pages in this eeprom)
-		if (ind_r < 1024*ROM_STRUCT_SIZE) {
+		if (ind_r < 1024*ROM_MAX_RECORDS) {
 			data[ind_r].id = dev_eui;
 			data[ind_r].timestamp = times;
 			data[ind_r].val = adc_val;

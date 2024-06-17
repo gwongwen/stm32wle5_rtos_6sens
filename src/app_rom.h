@@ -11,15 +11,14 @@
 //  ======== includes =============================================
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
-#include <zephyr/drivers/eeprom.h>
 #include <zephyr/drivers/flash.h>
 
 //  ======== defines ==============================================
 #define ROM_OFFSET              0x00
 #define ROM_PAGE_SIZE           512
 #define ROM_BUFFER_SIZE         14   // 1 structure: ID+timestamp+value = 14 bytes
-#define ROM_STRUCT_SIZE         36   // number of structures to store per page
-#define LORAWAN_DEV_EUI		    { 0x70, 0xB3, 0xD5, 0x7E, 0xD0, 0x06, 0x21, 0xA5 }  // ID for test
+#define ROM_MAX_RECORDS         36   // number of structures to store per page
+#define LORAWAN_DEV_EUI		    { 0x70, 0xB3, 0xD5, 0x7E, 0xD0, 0x06, 0x21, 0xA5 } 
 #define THRESHOLD               2048    // for now, VDD/2  
                                         
 //  ======== prototypes ===========================================

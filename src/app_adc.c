@@ -19,7 +19,7 @@ struct adc_sequence adc_ch13_seq = {
 	.buffer_size	= sizeof(sp_buf),
 };
 
-//  ======== app_adc_handler ====================================
+//  ======== app_adc_get_val =====================================
 uint16_t app_adc_get_val(void)
 {
 	int8_t err;
@@ -47,8 +47,8 @@ uint16_t app_adc_get_val(void)
 			       adc_channels[i].channel_id);
 
 		(void)adc_sequence_init_dt(&adc_channels[i], &adc_ch13_seq);
-		err = adc_read(adc_channels[i].dev, &adc_ch13_seq);
-		printk("adc: %d\n", sp_buf);
+		(void)adc_read(adc_channels[i].dev, &adc_ch13_seq);
+		printk("adc val: %"PRIu16"\n", sp_buf);
 	}
 	return sp_buf;
 }
