@@ -6,6 +6,7 @@
  */
 
 #include "app_rom.h"
+#include "app_flash.h"
 
 //  ======== globals ============================================
 uint8_t dev_eui[] = LORAWAN_DEV_EUI;
@@ -95,6 +96,7 @@ int8_t app_rom_handler(const struct device *dev)
 	int8_t ret;
 	const struct device *lora_dev;
 	struct rom_data data[ROM_BUFFER_SIZE];
+	static struct nvs_fs fs;
 	uint16_t adc_val;
 
 	// getting lora sx1276 device and eeprom device
@@ -116,7 +118,7 @@ int8_t app_rom_handler(const struct device *dev)
 		} else {
 			// writing data in pages of eeprom
 			//	app_rom_write(dev, data);
-			(void)app_flash_write(struct nvs_fs *fs, void *data);
+			(void)nvs_write(&fs, NVS_ADC_ID, data, sizeof(data));
 
 			// sending data
 			app_lorawan_handler(lora_dev, data);
