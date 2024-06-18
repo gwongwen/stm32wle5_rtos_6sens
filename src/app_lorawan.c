@@ -36,24 +36,32 @@ static const struct gpio_dt_spec led_rx = GPIO_DT_SPEC_GET(LED_RX, gpios);
 int8_t app_lorawan_init(const struct device *dev)
 {
     struct lorawan_join_config join_cfg;
+	static struct nvs_fs fs;
+	uint16_t dev_nonce = 0u;
 
     int8_t ret;
-    uint8_t dev_addr[] = LORAWAN_DEV_ADDR;
-    uint8_t nwk_skey[] = LORAWAN_NWK_SKEY;
-    uint8_t app_skey[] = LORAWAN_APP_SKEY;
-    uint8_t app_eui[]  = LORAWAN_APP_EUI;
+	int8_t itr = 1;
+	ssize_t err;
+	uint8_t dev_eui[] 	= LORAWAN_DEV_EUI;
+	uint8_t join_eui[]	= LORAWAN_JOIN_EUI;
+	uint8_t app_key[]	= LORAWAN_APP_KEY;
 
-    // setup tx and rx led at 
+    // setup tx led at GPIO PC0
     ret = gpio_pin_configure_dt(&led_tx, GPIO_OUTPUT_ACTIVE);
 	if (ret < 0) {
 		return 0;
 	}
+	// setup rx led at GPIO PC1
     ret = gpio_pin_configure_dt(&led_rx, GPIO_OUTPUT_ACTIVE);
 	if (ret < 0) {
 		return 0;
 	}
 
-    printk("starting lorawan node\n");
+	// initialization and reading/writing the devnonce parameter
+	app_flash_init(&fs);
+	app_flash_init_param(&fs, NVS_DEVNONCE_ID, &dev_nonce);
+
+	 printk("starting lorawan node\n");
     // getting lora sx1276 device
 	dev = DEVICE_DT_GET(DT_ALIAS(lora0));
 	if (!device_is_ready(dev)) {
@@ -63,6 +71,7 @@ int8_t app_lorawan_init(const struct device *dev)
 
 	printk("starting lorawan stack\n");
     // starting device
+	ret = lorawan_set_region(LORAWAN_REGION_EU868);
 	ret = lorawan_start();
 	if (ret < 0) {
 		printk("lorawan_start failed. error: %d\n", ret);
@@ -80,31 +89,48 @@ int8_t app_lorawan_init(const struct device *dev)
 	lorawan_register_downlink_callback(&downlink_cb);
 	lorawan_register_dr_changed_callback(lorwan_datarate_changed);  
 
-// configuration of lorawan parameters 
-    join_cfg.mode = LORAWAN_ACT_ABP;
-    join_cfg.dev_eui = dev_addr;
-    join_cfg.abp.dev_addr = dev_addr;
-    join_cfg.abp.app_skey = app_skey;
-    join_cfg.abp.nwk_skey = nwk_skey;
-    join_cfg.abp.app_eui  = app_eui;
+	// configuration of lorawan parameters 
+    join_cfg.mode = LORAWAN_ACT_OTAA;
+	join_cfg.dev_eui = dev_eui;
+	join_cfg.otaa.join_eui = join_eui;
+	join_cfg.otaa.app_key = app_key;
+	join_cfg.otaa.nwk_key = app_key;
+	join_cfg.otaa.dev_nonce = dev_nonce;
 
 	do {
-        // setup of lorawan parameters 
+		printk("joining network using OTAA, dev nonce %d, attempt %d\n", join_cfg.otaa.dev_nonce, itr++);
 		ret = lorawan_join(&join_cfg);
 
-        // flashing of the LED when a packet is received
-        ret = gpio_pin_toggle_dt(&led_rx);
+		// flashing of the LED when a packet is received
+		ret = gpio_pin_toggle_dt(&led_rx);
 			if (ret < 0) {
 				return 0;
 			}
 
 		if (ret < 0) {
-			printk("join network failed. error: %d\n", ret);
-			k_sleep(DELAY);
+			if ((ret =-ETIMEDOUT)) {
+				printk("timed-out waiting for response.\n");
+			} else {
+				printk("join network failed. error: %d\n", ret);
+			}
 		} else {
-			printk("join successful\n");
+			printk("OTAA join successful\n");
 		}
-	} while (ret != 0)	;
+
+		dev_nonce++;
+		join_cfg.otaa.dev_nonce = dev_nonce;
+
+		// save value away in Non-Volatile Storage.
+		err = nvs_write(&fs, NVS_DEVNONCE_ID, &dev_nonce, sizeof(dev_nonce));
+		if (err < 0) {
+			printk("NVS: failed to write id %d. error: %d\n", NVS_DEVNONCE_ID, err);
+		}
+
+		if (ret < 0) {
+			// if failed, wait before re-trying.
+			k_sleep(DELAY);
+		}
+	} while (ret != 0);
     return 0;
 }
 
@@ -171,7 +197,7 @@ int8_t app_lorawan_handler(const struct device *dev, uint16_t *data_tx)
 		return 0;
 	}
 	printk("data sent !\n");
-	k_sleep(DELAY);
+	//k_sleep(DELAY);
 	return 0;
 }
 

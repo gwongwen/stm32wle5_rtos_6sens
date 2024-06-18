@@ -29,6 +29,7 @@
 
 //  ======== prototypes ============================================
 int8_t app_flash_init(struct nvs_fs *fs);
+int8_t app_flash_init_param(struct nvs_fs *fs, uint16_t id, void *data);
 int8_t app_flash_write(struct nvs_fs *fs, void *data);
 int8_t app_flash_read(struct nvs_fs *fs);
 int8_t app_flash_handler(struct nvs_fs *fs);
