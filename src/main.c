@@ -11,6 +11,7 @@ void adc_work_handler(struct k_work *work_geo)
 {
 	const struct device *dev;
 	app_rom_handler(dev);
+	cnt++;
 }
 K_WORK_DEFINE(geo_work, adc_work_handler);
 
