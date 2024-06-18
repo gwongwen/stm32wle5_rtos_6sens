@@ -22,8 +22,10 @@
 #define NVS_BUFFER_SIZE         192     // 1 structure: 4 samples (vbat, temp, press, hum) = 8 bytes
                                         // strutures to store: 48 * 4 samples = 384 bytes
                                         // 4 samples per 30 mins
-#define NVS_SENSOR_ID           1                                     
-#define NVS_LOOP                 48       // 48 structures for one partition                                     
+#define NVS_DEVNONCE_ID         0
+#define NVS_SENSOR_ID           1
+#define NVS_BATTERY_ID          2                                              
+#define NVS_MAX_RECORDS         48       // 48 structures for one partition                                     
 
 //  ======== prototypes ============================================
 int8_t app_flash_init(struct nvs_fs *fs);

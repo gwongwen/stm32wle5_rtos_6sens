@@ -39,14 +39,14 @@ int8_t main(void)
 	// initialization of LoRaWAN
 	app_lorawan_init(dev);
 
-	printk("Measurement\nBoard: %s\n", CONFIG_BOARD);
+	printk("Geophone Measurement and Process Information\nBoard: %s\n", CONFIG_BOARD);
 	
 	// beginning of isr timer
-	k_timer_start(&adc_timer, K_SECONDS(5), K_SECONDS(5));	// for test
+	k_timer_start(&adc_timer, K_NO_WAIT, K_MSEC(5));
 
 	while (1) {
-		// counter value for waiting 10 min -> 600000ms
-		if (cnt >= 600000) {
+		// counter value for waiting 30 min -> 1 800 000ms
+		if (cnt >= 1800000) {
 			app_flash_handler(&fs);
 		}
 	}	

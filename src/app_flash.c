@@ -81,7 +81,8 @@ int8_t app_flash_read(struct nvs_fs *fs)
 
 	// printing data
 	for (int8_t i = 0; i < NVS_BUFFER_SIZE; i++) {
-		printk("vbat: %d, temp: %d, press: %d, hum: %d\n", data_rd[i].vbat, data_rd[i].temp, data_rd[i].press, data_rd[i].hum);
+		printk("vbat: %"PRIu16", temp: %"PRIu16", press: %"PRIu16", hum: %"PRIu16"\n",
+		data_rd[i].vbat, data_rd[i].temp, data_rd[i].press, data_rd[i].hum);
 	}
 	return 0;		
 }
@@ -102,7 +103,7 @@ int8_t app_flash_handler(struct nvs_fs *fs)
 	lora_dev = DEVICE_DT_GET(DT_ALIAS(lora0));
 
 	// putting 48 structures in fisrt page
-	if (ind_f < NVS_LOOP) {
+	if (ind_f < NVS_MAX_RECORDS) {
 		data[ind_f].vbat = app_stm32_get_vbat(bat_dev);
 		data[ind_f].temp = app_bme280_get_temp(bme_dev);
 		data[ind_f].press = app_bme280_get_press(bme_dev);
