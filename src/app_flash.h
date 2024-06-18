@@ -24,7 +24,8 @@
                                         // 4 samples per 30 mins
 #define NVS_DEVNONCE_ID         0
 #define NVS_SENSOR_ID           1
-#define NVS_BATTERY_ID          2                                              
+#define NVS_BATTERY_ID          2
+#define NVS_ADC_ID              3                                              
 #define NVS_MAX_RECORDS         48       // 48 structures for one partition                                     
 
 //  ======== prototypes ============================================

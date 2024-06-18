@@ -123,11 +123,12 @@ int8_t app_flash_handler(struct nvs_fs *fs)
 		data[ind_f].temp = app_bme280_get_temp(bme_dev);
 		data[ind_f].press = app_bme280_get_press(bme_dev);
 		data[ind_f].hum = app_bme280_get_hum(bme_dev);
-		ind_f++;
-	} else {
+
 		// writing data in first page of eeprom
 		app_flash_write(&flash, data);
-
+		
+		ind_f++;
+	} else {
 		// sending data onca a day
 		app_lorawan_handler(lora_dev, data);
 

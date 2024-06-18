@@ -108,14 +108,15 @@ int8_t app_rom_handler(const struct device *dev)
 	if (adc_val > THRESHOLD){
 
 		// putting 36 structures in all page (1024 pages in this eeprom)
-		if (ind_r < 1024*ROM_MAX_RECORDS) {
+		if (ind_r < ROM_MAX_RECORDS) {
 			data[ind_r].id = dev_eui;
 			data[ind_r].timestamp = times;
 			data[ind_r].val = adc_val;
 			ind_r++;
 		} else {
 			// writing data in pages of eeprom
-			app_rom_write(dev, data);
+			//	app_rom_write(dev, data);
+			(void)app_flash_write(struct nvs_fs *fs, void *data);
 
 			// sending data
 			app_lorawan_handler(lora_dev, data);
