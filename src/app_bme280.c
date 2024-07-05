@@ -33,9 +33,6 @@ uint16_t app_bme280_get_temp(const struct device *dev)
     uint16_t temp_uint16;
     int8_t ret;
 
-    // getting bme280 sensor i2c device
-    dev = DEVICE_DT_GET_ANY(bosch_bme280);
-
     // fetching data
 	ret = sensor_sample_fetch(dev);
     if (ret < 0 && ret != -EBADMSG) { 
@@ -64,8 +61,6 @@ uint16_t app_bme280_get_press(const struct device *dev)
     uint16_t press_uint16;
     int8_t ret;
 
-    // getting bme280 sensor i2c device
-    dev = DEVICE_DT_GET_ANY(bosch_bme280);
 
     // fetching data
 	ret = sensor_sample_fetch(dev);
@@ -95,9 +90,6 @@ uint16_t app_bme280_get_hum(const struct device *dev)
     uint16_t hum_uint16;
     int8_t ret;
 
-    // getting bme280 sensor i2c device
-    dev = DEVICE_DT_GET_ANY(bosch_bme280);
-
     // fetching data
 	ret = sensor_sample_fetch(dev);
     if (ret < 0 && ret != -EBADMSG) { 
@@ -114,7 +106,7 @@ uint16_t app_bme280_get_hum(const struct device *dev)
 
     // humidity received from channel get
     // resolution 12 bits: 0 to 4095 (uint16)
-	hum_uint16 = (uint16_t)(sensor_value_to_milli(&hum_int32)/1000);
+	hum_uint16 = (uint16_t)(100-(sensor_value_to_milli(&hum_int32)/1000));
     printk("bme280 humidity: %"PRIu16"\n", hum_uint16);
     return hum_uint16;
 }

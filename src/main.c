@@ -25,7 +25,7 @@ K_TIMER_DEFINE(adc_timer, adc_timer_handler, NULL);
 int8_t main(void)
 {
 	const struct device *dev;
-	static struct nvs_fs fs;
+	struct nvs_fs fs;
 	uint16_t vbat;
 	cnt = 0;
 	uint32_t max_cnt = 0;
@@ -34,8 +34,8 @@ int8_t main(void)
 	// initialization of all devices
 	app_bme280_init(dev);
 	app_stm32_vbat_init(dev);
-	app_rom_init(dev);
-	app_flash_init(dev);
+//	app_rom_init(dev);
+	app_flash_init(&fs);
 
 	// initialization of LoRaWAN
 	app_lorawan_init(dev);
@@ -50,6 +50,6 @@ int8_t main(void)
 		if (cnt >= 1800000) {
 			app_flash_handler(&fs);
 		}
-	}	
+	}
 	return 0;
 }

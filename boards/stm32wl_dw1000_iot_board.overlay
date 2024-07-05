@@ -7,27 +7,46 @@
 
 /* configuration of ADC for geophone sensor */
 /* adjust channel number according to pinmux in board.dts */
-/* PB13 ADC_GSONE -> ADC_IN0 - see datasheet Pinout Config pg 56/149*/
+/* PB13 ADC_GSONE -> ADC_IN0 - see datasheet Pinout Config pg 57/149*/
 
 / {
 	zephyr,user {
-		io-channels = <&adc1 13>;
+		io-channels = <&adc1 0>;
 	};
 
-/* VBAT battery voltage monitoring */
-/* internal ADC channnel of STM32, Px14 - see datasheet ADC part pg 42/149 */
+/* channel configuration for geophone */
+/* enable the corresponding ADC, with the correct vref value (in mV) */
+	#address-cells = <1>;
+	#size-cells = <0>;
+	compatible = "st,stm32-adc";
+	vref-channel = <13>;
+	channel@0 {
+		reg = <0>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_MAX>;
+		zephyr,resolution = <12>;
+		zephyr,vref-mv = <3300>;
+	};
+	status = "okay";
+};
 
+/* VBAT battery voltage monitoring */
+/* external ADC channnel of STM32, IN5 - Port PB1 on schematic */
+/ {
 	stm32_vbat: stm32vbat {
     	compatible = "st,stm32-vbat";
-    	io-channels = <&adc1 14>;
-    	ratio = <3>;
+    	io-channels = <&adc1 5>;
+   		ratio = <3>;
     	status = "okay";
 	};
 };
 
 /* enable the corresponding ADC, with the correct vref value (in mV) */
 &adc1 {
-	vref-mv = <1100>;
+	vref-channel = <13>;
+	vbat-channel = <5>;
+	vref-mv = <3000>;
 	status = "okay";
 };
 
@@ -40,19 +59,4 @@
 		reg = <0x77>;
 	};
 };
-
-/* channel configuration for geophone */
-&adc1 {
-	#address-cells = <1>;
-	#size-cells = <0>;
-	status = "okay";
-	channel@13 {
-		reg = <13>;
-		zephyr,gain = "ADC_GAIN_1";
-		zephyr,reference = "ADC_REF_INTERNAL";
-		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
-		zephyr,resolution = <12>;
-	};
-};
-
 

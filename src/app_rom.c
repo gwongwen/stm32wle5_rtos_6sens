@@ -101,29 +101,33 @@ int8_t app_rom_handler(const struct device *dev)
 
 	// getting lora sx1276 device and eeprom device
 	lora_dev = DEVICE_DT_GET(DT_ALIAS(lora0));
-	dev = DEVICE_DT_GET(DT_ALIAS(eeprom0));
+	//dev = DEVICE_DT_GET(DT_ALIAS(eeprom0));
 
 	// getting value of the geophone from the adc
 	adc_val = app_adc_get_val();
+	printk("adc val: %"PRIu16"", adc_val);
 
 	// definition of a trigger threshold
-	if (adc_val > THRESHOLD){
+/*	if (adc_val > THRESHOLD){
 
 		// putting 36 structures in all page (1024 pages in this eeprom)
 		if (ind_r < ROM_MAX_RECORDS) {
 			data[ind_r].id = dev_eui;
 			data[ind_r].timestamp = times;
 			data[ind_r].val = adc_val;
+
+			(void)nvs_write(&fs, NVS_ADC_ID, data, sizeof(data));
+			
 			ind_r++;
 		} else {
 			// writing data in pages of eeprom
 			//	app_rom_write(dev, data);
-			(void)nvs_write(&fs, NVS_ADC_ID, data, sizeof(data));
 
 			// sending data
+			printk("data sent: %"PRIu16"\n", data->val);
 			app_lorawan_handler(lora_dev, data);
 			ind_r = 0;
 		}
-	}
+	}*/
 	return 0;
 }
