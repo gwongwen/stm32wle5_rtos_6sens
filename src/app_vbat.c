@@ -28,11 +28,11 @@ int8_t app_stm32_vbat_init(const struct device *dev)
 }
 
 //  ======== app_stm32_get_vbat =============================================
-uint16_t app_stm32_get_vbat(const struct device *dev)
+uint16_t app_stm32_get_vbat(const struct device *dev, uint16_t val)
 {
     struct sensor_value bat_int32;
-    uint16_t bat_uint16;
-    int8_t ret = 0;
+    uint16_t bat_uint16, vbat;
+    int8_t ret;
 
     // fetching data
     ret = sensor_sample_fetch(dev);
@@ -50,8 +50,8 @@ uint16_t app_stm32_get_vbat(const struct device *dev)
 
     // battery level received and converted from channel get
     // resolution 12bits: 0 to 4095 (uint16)
-    // voltage-divider by 2 on schematic
-    bat_uint16 = (uint16_t)(sensor_value_to_milli(&bat_int32)*2);
-    printk("stm32 vbat: %"PRIu16"\n", bat_uint16);
-    return bat_uint16;
+    bat_uint16 = (uint16_t)(sensor_value_to_milli(&bat_int32));
+    vbat = (bat_uint16*val)/3300;
+    printk("stm32 vbat: %"PRIu16"\n", vbat);
+    return vbat;
 }

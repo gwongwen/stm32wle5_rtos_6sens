@@ -17,6 +17,6 @@
 #define DT_SPEC_AND_COMMA(node_id, prop, idx)   ADC_DT_SPEC_GET_BY_IDX(node_id, idx)
 
 //  ======== prototypes ===========================================
-uint16_t app_adc_get_val(void);
+uint16_t app_adc_get_val(uint16_t val);
 
 #endif /* APP_ADC_H */

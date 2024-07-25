@@ -14,40 +14,42 @@
 		io-channels = <&adc1 0>;
 	};
 
-/* channel configuration for geophone */
-/* enable the corresponding ADC, with the correct vref value (in mV) */
+/* channel IN0 configuration for geophone */
 	#address-cells = <1>;
 	#size-cells = <0>;
-	compatible = "st,stm32-adc";
-	vref-channel = <13>;
 	channel@0 {
 		reg = <0>;
 		zephyr,gain = "ADC_GAIN_1";
 		zephyr,reference = "ADC_REF_INTERNAL";
 		zephyr,acquisition-time = <ADC_ACQ_TIME_MAX>;
 		zephyr,resolution = <12>;
-		zephyr,vref-mv = <3300>;
 	};
 	status = "okay";
 };
 
-/* VBAT battery voltage monitoring */
-/* external ADC channnel of STM32, IN5 - Port PB1 on schematic */
+/* VREF internal voltage monitoring */
+/* internal voltage reference of STM32, IN13 - see datasheet pg 42/149 */
+/* Vrefint = 1232mV max - see datasheet pg 78/149, table 36 */
 / {
-	stm32_vbat: stm32vbat {
-    	compatible = "st,stm32-vbat";
-    	io-channels = <&adc1 5>;
-   		ratio = <3>;
+	stm32_vref: stm32vref {
+    	compatible = "st,stm32-vref";
+		io-channels = <&adc1 13>;
+		vrefint-cal-addr = <13>;
+		vrefint-cal-mv = <1232>;
     	status = "okay";
 	};
 };
 
-/* enable the corresponding ADC, with the correct vref value (in mV) */
-&adc1 {
-	vref-channel = <13>;
-	vbat-channel = <5>;
-	vref-mv = <3000>;
-	status = "okay";
+/* VBAT battery voltage monitoring - see datasheet pg 42/149, part 3.18.3 */
+/* internal ADC channnel of STM32, IN14 */
+/* ratio = 3 -> the converted digital value is 1/3 of vbat */
+/ {
+	stm32_vbat: stm32vbat {
+    	compatible = "st,stm32-vbat";
+    	io-channels = <&adc1 14>;
+   		ratio = <3>;
+    	status = "okay";
+	};
 };
 
 /* config of BME280 sensor (temperature and Humidity) on i2c bus */

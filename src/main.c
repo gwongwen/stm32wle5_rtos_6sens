@@ -34,7 +34,7 @@ int8_t main(void)
 	// initialization of all devices
 	app_bme280_init(dev);
 	app_stm32_vbat_init(dev);
-//	app_rom_init(dev);
+	app_rom_init(dev);
 	app_flash_init(&fs);
 
 	// initialization of LoRaWAN

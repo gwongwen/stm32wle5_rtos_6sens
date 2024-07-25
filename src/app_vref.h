@@ -5,8 +5,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef APP_VBAT_H
-#define APP_VBAT_H
+#ifndef APP_VREF_H
+#define APP_VREF_H
 
 //  ======== includes ==============================================
 #include <zephyr/kernel.h>
@@ -14,7 +14,7 @@
 #include <zephyr/drivers/sensor.h>
 
 //  ======== prototypes ============================================
-int8_t app_stm32_vbat_init(const struct device *dev);
-uint16_t app_stm32_get_vbat(const struct device *dev, uint16_t val);
+int8_t app_stm32_vref_init(const struct device *dev);
+uint16_t app_stm32_get_vref(const struct device *dev);
 
-#endif /* APP_VBAT_H */
+#endif /* APP_VREF_H */

@@ -64,7 +64,7 @@ int8_t app_rom_write(const struct device *dev, void *data)
 	if (ret) {
 		printk("error writing data. error: %d\n", ret);
 	} else {
-		printk("wrote %zu bytes to address 0x0003f000\n", sizeof(data));
+		printk("wrote %zu bytes to address 0x00\n", sizeof(data));
 	}
 	return 0;
 }
